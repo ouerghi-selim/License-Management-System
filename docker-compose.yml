@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  php:
+    container_name: papercut_php
+    build:
+      context: ./docker/php
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - database
+
+  nginx:
+    container_name: papercut_nginx
+    image: nginx:stable-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+
+  database:
+    container_name: papercut_db
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: papercut
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    ports:
+      - "5432:5432"
+    volumes:
+      - database_data:/var/lib/postgresql/data
+
+volumes:
+  database_data:
