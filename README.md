@@ -1,4 +1,4 @@
-# License Management System
+# LicenseFlow
 
 A modern license management system built with Symfony 6, designed to handle software license distribution and management.
 
@@ -72,11 +72,3 @@ docker compose exec php bin/console doctrine:migrations:migrate
 ├── composer.json
 └── docker-compose.yml
 ```
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a new Pull Request
