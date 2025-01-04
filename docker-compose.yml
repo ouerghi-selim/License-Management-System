@@ -1,1 +1,37 @@
-{"encoding":"base64","content":"dmVyc2lvbjogJzMuOCcKCnNlcnZpY2VzOgogIHBocDoKICAgIGNvbnRhaW5lcl9uYW1lOiBsaWNlbnNlZmxvd19waHAKICAgIGJ1aWxkOgogICAgICBjb250ZXh0OiAuL2RvY2tlci9waHAKICAgIHZvbHVtZXM6CiAgICAgIC0gLi86L3Zhci93d3cvaHRtbAogICAgZGVwZW5kc19vbjoKICAgICAgLSBkYXRhYmFzZQoKICBuZ2lueDoKICAgIGNvbnRhaW5lcl9uYW1lOiBsaWNlbnNlZmxvd19uZ2lueAogICAgaW1hZ2U6IG5naW54OnN0YWJsZS1hbHBpbmUKICAgIHBvcnRzOgogICAgICAtICI4MDgwOjgwIgogICAgdm9sdW1lczoKICAgICAgLSAuLzovdmFyL3d3dy9odG1sCiAgICAgIC0gLi9kb2NrZXIvbmdpbngvZGVmYXVsdC5jb25mOi9ldGMvbmdpbngvY29uZi5kL2RlZmF1bHQuY29uZgogICAgZGVwZW5kc19vbjoKICAgICAgLSBwaHAKCiAgZGF0YWJhc2U6CiAgICBjb250YWluZXJfbmFtZTogbGljZW5zZWZsb3dfZGIKICAgIGltYWdlOiBwb3N0Z3JlczoxNS1hbHBpbmUKICAgIGVudmlyb25tZW50OgogICAgICBQT1NUR1JFU19EQjogbGljZW5zZWZsb3cKICAgICAgUE9TVEdSRVNfVVNFUjogYXBwCiAgICAgIFBPU1RHUkVTX1BBU1NXT1JEOiBhcHAKICAgIHBvcnRzOgogICAgICAtICI1NDMyOjU0MzIiCiAgICB2b2x1bWVzOgogICAgICAtIGRhdGFiYXNlX2RhdGE6L3Zhci9saWIvcG9zdGdyZXNxbC9kYXRhCgp2b2x1bWVzOgogIGRhdGFiYXNlX2RhdGE6"}
+version: '3.8'
+
+services:
+  php:
+    container_name: licenseflow_php
+    build:
+      context: ./docker/php
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - database
+
+  nginx:
+    container_name: licenseflow_nginx
+    image: nginx:stable-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+
+  database:
+    container_name: licenseflow_db
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: licenseflow
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    ports:
+      - "5432:5432"
+    volumes:
+      - database_data:/var/lib/postgresql/data
+
+volumes:
+  database_data:
