@@ -1,3 +1,8 @@
+version: '3.8'
+
+volumes:
+  database_data:
+
 services:
   php:
     container_name: licenseflow_php
@@ -30,6 +35,3 @@ services:
       - "5432:5432"
     volumes:
       - database_data:/var/lib/postgresql/data
-
-volumes:
-  database_data:
